@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uma Surpresa Para Você</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Montserrat:wght@700;800&family=Cinzel:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        /* --- VARIAVEIS GLOBAIS DE ESTILO --- */
+        :root {
+            --cor-fundo: #0a101f;
+            --cor-dourado-premium: #FFD700;
+            --cor-laco-amor: #cba3ff; 
+            --cor-branco-puro: #ffffff;
+            --cor-branco-suave: #e0e7ef;
+            --cor-cinza-claro: #b0bac9;
+            --borda-raio: 16px;
+
+            /* Cores Padrão (Tema Feminino por padrão na demo) */
+            --cor-primaria: #ff0080; 
+            --cor-secundaria: #ff69b4; 
+            --gradiente-principal: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+            --cor-sinfonia: var(--cor-primaria);
+        }
+
+        /* --- ESTILOS BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--cor-fundo); color: var(--cor-branco-suave); line-height: 1.7; overflow-x: hidden; position: relative; }
+        
+        /* --- CONTAINER DA DEMONSTRAÇÃO INTERATIVA --- */
+        #interactive-demo-container {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #02000c;
+            z-index: 2000;
+            overflow-y: auto;
+            opacity: 1;
+        }
+
+        #galaxy-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #02000c url('https://www.transparenttextures.com/patterns/stardust.png');
+            overflow: hidden;
+            z-index: -2;
+        }
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- LAYOUT E ESTILO DA DEMONSTRAÇÃO --- */
+        #interactive-demo-container .body-wrapper {
+            font-family: 'Poppins', sans-serif;
+            color: var(--cor-branco-suave);
+            overflow-x: hidden;
+            padding: 0 1rem;
+        }
+
+        .feature-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 6rem;
+            max-width: 1100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-text-content {
+            flex: 1;
+            min-width: 280px;
+            text-align: left;
+        }
+
+        .feature-interactive-element {
+            flex: 1;
+            min-width: 280px;
+        }
+        
+        .feature-showcase:nth-child(even) .feature-text-content {
+            order: 2;
+        }
+
+        @media (max-width: 768px) {
+            .feature-showcase:nth-child(even) .feature-text-content {
+                order: 0;
+            }
+        }
+        
+        .feature-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            font-weight: 700;
+            color: var(--cor-branco-puro);
+            margin-bottom: 0.5rem;
+        }
+        .feature-description {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: var(--cor-cinza-claro);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        #heart-rain-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: -1; }
+        .background-heart { position: absolute; top: -5%; font-size: 1rem; color: #ff2d75; animation: fall linear infinite; text-shadow: 0 0 8px #ff2d75, 0 0 15px #ff89b0; opacity: 0; }
+        @keyframes fall { to { transform: translateY(105vh) rotate(360deg); opacity: 0; } }
+        
+        #tela-entrada { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; display: flex; justify-content: center; align-items: center; background-color: transparent; transition: opacity 0.8s ease-out, visibility 0.8s ease-out; opacity: 1; visibility: visible; padding: 1rem; }
+        .conteudo-entrada { display: flex; align-items: center; justify-content: center; gap: 1.5rem; flex-wrap: nowrap; max-width: 95vw; z-index: 2; opacity: 0; animation: fadeInEntrada 2s forwards 0.5s; transition: opacity 0.5s ease-out; }
+        @keyframes fadeInEntrada { to { opacity: 1; } }
+
+        #cadeado-container { position: relative; width: 5rem; height: 5rem; cursor: pointer; animation: pulsarCadeado 4s infinite ease-in-out; flex-shrink: 0; }
+        #cadeado-container > i { position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-size: 5rem; color: var(--cor-branco-puro); text-shadow: 0 0 10px #cba3ff, 0 0 20px #cba3ff, 0 0 40px #e6d8ff; transition: opacity 0.6s ease-in-out, transform 0.4s ease; }
+        #icone-cadeado-aberto { opacity: 0; }
+        #cadeado-container.aberto #icone-cadeado-fechado { opacity: 0; }
+        #cadeado-container.aberto #icone-cadeado-aberto { opacity: 1; }
+        @keyframes pulsarCadeado { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        #cadeado-container:hover { transform: scale(1.1); }
+        #botao-desbloquear { font-family: 'Montserrat', serif; font-size: 1.1rem; letter-spacing: 1px; text-transform: uppercase; background: transparent; color: #d8cde8; border: 1px solid #cba3ff; padding: 1rem 2rem; border-radius: 50px; cursor: pointer; transition: all 0.4s ease; max-width: 350px; }
+        #botao-desbloquear:hover { background: rgba(203, 163, 255, 0.1); color: var(--cor-branco-puro); border-color: #e6d8ff; box-shadow: 0 0 15px rgba(203, 163, 255, 0.3); }
+
+        .efeito-flash { position: fixed; top: 50%; left: 50%; width: 20px; height: 20px; background: radial-gradient(circle, var(--cor-branco-puro), rgba(255,255,255,0)); border-radius: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; z-index: 1001; pointer-events: none; }
+        @keyframes explosaoFlash { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; } 90% { opacity: 1; } 100% { transform: translate(-50%, -50%) scale(200); opacity: 0; } }
+
+        #conteudo-principal-demo { opacity: 0; visibility: hidden; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 6rem 1rem; transition: opacity 1.5s ease-in-out, visibility 1.5s; }
+        #conteudo-principal-demo.visivel { opacity: 1; visibility: visible; }
+        .titulo-principal { font-family: 'Montserrat', serif; font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; color: var(--cor-branco-puro); text-shadow: 0 0 15px #cba3ff; text-align: center; }
+        .subtitulo-principal { font-family: 'Poppins', sans-serif; font-size: clamp(1rem, 4vw, 1.3rem); margin-top: 0.5rem; margin-bottom: 5rem; text-align: center; color: var(--cor-cinza-claro); }
+        
+        #carta { background-color: #fdfaf2; background-image: url('https://www.transparenttextures.com/patterns/old-paper.png'); border-radius: var(--borda-raio); box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 35px rgba(203, 163, 255, 0.4); border: 1px solid #dcd3c0; padding: clamp(1.5rem, 5vw, 3rem); color: #4a3e35; }
+        #carta h2 { font-family: 'Montserrat', sans-serif; font-size: clamp(2rem, 7vw, 2.5rem); color: #b98f58; text-align: center; margin-bottom: 1.5rem; font-weight: 700; }
+        #carta p { font-family: 'Poppins', sans-serif; font-size: clamp(1rem, 3vw, 1.1rem); line-height: 1.8; margin-bottom: 1.2rem; text-align: justify; }
+        .assinatura { font-family: 'Dancing Script', cursive; text-align: right; font-size: clamp(1.4rem, 4vw, 1.8rem); margin-top: 2.5rem; color: #a87b4f; line-height: 1.5; }
+        .separador-carta { border: 0; height: 1px; background-image: linear-gradient(to right, rgba(74, 62, 53, 0), rgba(74, 62, 53, 0.6), rgba(74, 62, 53, 0)); margin: 2rem auto; width: 80%; }
+        
+        #fotos-wrapper { position: relative; width: 100%; aspect-ratio: 3 / 4; background-color: #000; border-radius: var(--borda-raio); overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 35px rgba(203, 163, 255, 0.4); }
+        .carrossel-foto { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; opacity: 0; transition: opacity 1.2s ease-in-out; visibility: hidden; }
+        .carrossel-foto.ativa { opacity: 1; visibility: visible; z-index: 10; }
+        
+        #players-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+        #players-wrapper iframe { width: 100%; height: 152px; border-radius: var(--borda-raio); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        #contract-title { font-family: 'Montserrat', serif; font-size: clamp(1.5rem, 4vw, 2rem); text-align: center; border-bottom: 2px solid #b98f58; padding-bottom: 1rem; margin-bottom: 2rem; color: #4a3e35; }
+        #scroll-paper .contract-body { font-family: 'Poppins', sans-serif; line-height: 1.8; text-align: left; }
+        #scroll-paper .contract-body strong { color: #8c6b4e; }
+
+        .carrossel-botoes { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 1rem; z-index: 20; pointer-events: none; }
+        .carrossel-botoes button { background: rgba(0,0,0,0.3); border: none; color: var(--cor-branco-puro); font-size: 2rem; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; transition: all 0.3s ease; pointer-events: all; }
+        .carrossel-botoes button:hover { background: rgba(0,0,0,0.6); transform: scale(1.1); }
+        #efeito-piscar { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 15; opacity: 0; pointer-events: none; transition: opacity 0.2s ease-in-out; }
+        #efeito-piscar.ativo { opacity: 1; }
+        .tempo-wrapper { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+        .tempo-wrapper > div { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(203, 163, 255, 0.2); border-radius: var(--borda-raio); width: 120px; height: 120px; box-shadow: 0 0 15px rgba(203, 163, 255, 0.1); }
+        .tempo-wrapper span:first-child { font-size: clamp(2rem, 8vw, 3rem); font-weight: 700; color: var(--cor-branco-puro); line-height: 1; }
+        .tempo-wrapper span:last-child { font-size: clamp(0.8rem, 3vw, 1rem); text-transform: uppercase; letter-spacing: 1px; color: #d8cde8; margin-top: 0.5rem; }
+        .audio-player-custom { display: flex; align-items: center; gap: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(203, 163, 255, 0.2); padding: 1rem; border-radius: 50px; width: 100%; max-width: 500px; margin: 0 auto; box-shadow: 0 0 15px rgba(203, 163, 255, 0.1); }
+        #audio-play-pause { background-color: #cba3ff; color: #02000c; border: none; border-radius: 50%; width: 50px; height: 50px; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s ease; flex-shrink: 0; }
+        #audio-play-pause:hover { transform: scale(1.1); }
+        .audio-progress-container { flex-grow: 1; background-color: rgba(0,0,0,0.3); height: 8px; border-radius: 5px; cursor: pointer; }
+        #audio-progress-bar { width: 0%; height: 100%; background-color: #e6d8ff; border-radius: 5px; }
+        #audio-time { color: #d8cde8; font-size: 0.9rem; min-width: 90px; text-align: center; }
+        #game-area-wrapper { width: 100%; max-width: 700px; margin: 0 auto; }
+        #game-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-size: 1.2rem; color: var(--cor-branco-puro); font-family: 'Poppins', serif; }
+        #game-area { width: 100%; height: 500px; background-color: #000; border: 2px solid #cba3ff; border-radius: var(--borda-raio); position: relative; overflow: hidden; box-shadow: 0 0 25px rgba(203, 163, 255, 0.3); }
+        #game-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; z-index: 50; transition: opacity 0.5s ease; }
+        #game-overlay.hidden { opacity: 0; pointer-events: none; }
+        #game-start-btn { font-family: 'Montserrat', serif; font-size: 1.2rem; padding: 1rem 2.5rem; border-radius: 50px; border: 1px solid #cba3ff; color: #d8cde8; background: transparent; cursor: pointer; transition: all 0.3s ease; }
+        #game-start-btn:hover { background: rgba(203, 163, 255, 0.1); color: var(--cor-branco-puro); }
+        #game-instructions { margin-bottom: 2rem; font-size: 1.2rem; }
+        #game-final-score { font-size: 1.8rem; margin-bottom: 1rem; }
+        .game-heart { position: absolute; font-size: 2rem; cursor: pointer; user-select: none; text-shadow: 0 0 8px rgba(255, 255, 255, 0.5), 0 0 15px #ff2d75; animation: heart-pulse 1.5s infinite ease-in-out; will-change: transform; }
+        @keyframes heart-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .game-heart.captured { animation: none; transition: transform 0.3s ease-out, opacity 0.3s ease-out; transform: scale(2.5); opacity: 0; }
+        #secret-form { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; transition: opacity 0.5s ease-out; }
+        #secret-lock-icon { font-size: 4rem; color: #e6d8ff; text-shadow: 0 0 15px #cba3ff; transition: transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+        #secret-lock-icon.unlocked { transform: rotate(-20deg) scale(0.8); opacity: 0.5; }
+        #password-input { font-family: 'Poppins', serif; background-color: rgba(255,255,255,0.1); border: 1px solid #cba3ff; border-radius: 50px; padding: 0.8rem 1.5rem; color: var(--cor-branco-puro); font-size: 1.1rem; text-align: center; width: 100%; max-width: 300px; }
+        #password-input::placeholder { color: #d8cde8; opacity: 0.7; }
+        #password-input.shake { animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        #unlock-btn { font-family: 'Montserrat', serif; font-size: 1rem; padding: 0.8rem 2rem; border-radius: 50px; border: 1px solid #cba3ff; color: #d8cde8; background: transparent; cursor: pointer; transition: all 0.3s ease; }
+        #unlock-btn:hover { background: rgba(203, 163, 255, 0.1); color: var(--cor-branco-puro); }
+        #secret-letter-container { display: none; opacity: 0; transform: translateY(20px); transition: opacity 1s ease-out, transform 1s ease-out; width: 100%; max-width: 700px; position: relative; }
+        #secret-letter-container.visible { display: block; opacity: 1; transform: translateY(0); }
+        #secret-letter { background-color: #1a1426; border-radius: var(--borda-raio); box-shadow: 0 0 40px rgba(203, 163, 255, 0.4); border: 1px solid #cba3ff; padding: clamp(1.5rem, 5vw, 3rem); color: #d8cde8; }
+        #secret-letter-close-btn { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: #d8cde8; font-size: 1.5rem; cursor: pointer; transition: color 0.3s, transform 0.3s; }
+        #secret-letter-close-btn:hover { color: var(--cor-branco-puro); transform: scale(1.2); }
+        
+        #hearts-wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; max-width: 500px; }
+        .special-heart { position: relative; font-size: 2.5rem; color: #ff4757; cursor: pointer; transition: transform 0.3s ease, text-shadow 0.3s ease; text-shadow: 0 0 10px #ff2d75; animation: float-animation 6s infinite ease-in-out; }
+        @keyframes float-animation { 0% { transform: translateY(0px) rotate(0deg) scale(1.05); } 50% { transform: translateY(-10px) rotate(5deg) scale(1); } 100% { transform: translateY(0px) rotate(0deg) scale(1.05); } }
+        .special-heart:hover { transform: scale(1.25) translateY(-5px) !important; text-shadow: 0 0 20px #ff2d75, 0 0 30px #e6d8ff; animation-play-state: paused; }
+        .special-heart:nth-child(2) { animation-delay: -0.6s; }
+        .special-heart:nth-child(3) { animation-delay: -1.2s; }
+        .special-heart:nth-child(4) { animation-delay: -1.8s; }
+        .special-heart:nth-child(5) { animation-delay: -2.4s; }
+        .special-heart:nth-child(6) { animation-delay: -3.0s; }
+        .special-heart:nth-child(7) { animation-delay: -3.6s; }
+        .special-heart:nth-child(8) { animation-delay: -4.2s; }
+        .special-heart:nth-child(9) { animation-delay: -4.8s; }
+        .special-heart:nth-child(10) { animation-delay: -5.4s; }
+        
+        #heart-message-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(2, 0, 12, 0.85); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        #heart-message-modal.visible { opacity: 1; visibility: visible; }
+        #modal-content { background: linear-gradient(145deg, #1f1533, #150e24); padding: 2.5rem; border-radius: var(--borda-raio); border: 1px solid #cba3ff; box-shadow: 0 0 50px rgba(203, 163, 255, 0.5); text-align: center; position: relative; max-width: 90%; width: 500px; transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
+        #heart-message-modal.visible #modal-content { transform: scale(1); }
+        #modal-text { font-family: 'Poppins', sans-serif; font-size: clamp(1.5rem, 5vw, 2rem); color: #e6d8ff; text-shadow: 0 0 10px #e6d8ff; line-height: 1.6; }
+        #modal-close-btn { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #d8cde8; font-size: 2rem; cursor: pointer; transition: color 0.3s, transform 0.3s; }
+        #modal-close-btn:hover { color: var(--cor-branco-puro); transform: rotate(90deg); }
+        
+        /* --- ESTILOS DO CONTRATO/PEDIDO --- */
+        #proposal-content { text-align: center; }
+        #proposal-question { margin-bottom: 2rem; line-height: 1.7; font-size: 1.1rem; }
+        #proposal-buttons { display: flex; justify-content: center; align-items: center; gap: 1rem; flex-direction: column; }
+        @media (min-width: 640px) { #proposal-buttons { flex-direction: row; gap: 1.5rem; } }
+        #proposal-buttons button { font-family: 'Montserrat', serif; font-size: 1.1rem; padding: 1rem 2rem; border-radius: 50px; cursor: pointer; transition: all 0.4s ease; border: 1px solid #cba3ff; width: 100%; max-width: 350px; }
+        @media (min-width: 640px) { #proposal-buttons button { width: auto; } }
+        #yes-btn { background-color: #cba3ff; color: #02000c; box-shadow: 0 0 20px #cba3ff; }
+        #yes-btn:hover { transform: scale(1.05); }
+        #doubt-btn { background: transparent; color: #d8cde8; }
+        #doubt-btn.hidden { display: none; }
+        #doubt-message { margin-top: 1.5rem; color: #e6d8ff; opacity: 0; transition: opacity 0.5s; height: 0; overflow: hidden; }
+        #doubt-message.visible { opacity: 1; height: auto; }
+
+        #proposal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(2, 0, 12, 0.9); backdrop-filter: blur(10px); display: flex; justify-content: center; align-items: center; z-index: 2500; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s; }
+        #proposal-modal.visible { opacity: 1; visibility: visible; }
+        #treasure-chest-icon { font-size: 8rem; color: #e6d8ff; text-shadow: 0 0 20px #cba3ff; transition: transform 1s, opacity 0.5s; }
+        #treasure-chest-icon.open { transform: scale(1.1) rotate(-5deg); }
+        #scroll-container { display: none; width: 100%; max-width: 600px; padding: 1rem; }
+        #scroll-paper { width: 100%; height: auto; max-height: 80vh; background-color: #fdfaf2; background-image: url('https://www.transparenttextures.com/patterns/old-paper.png'); color: #4a3e35; border: 4px solid #b98f58; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 3rem; clip-path: inset(0 0 100% 0); transition: clip-path 4s cubic-bezier(0.785, 0.135, 0.15, 0.86); overflow-y: auto; }
+        #scroll-paper.unrolling { clip-path: inset(0 0 0 0); }
+        .contract-stamp { font-family: 'Montserrat', serif; color: #c0392b; border: 3px solid #c0392b; padding: 0.5rem; font-size: 1.2rem; font-weight: bold; transform: rotate(-10deg); margin: 2rem auto; width: fit-content; }
+        #contract-close-btn { display: block; margin: 2rem auto 0; font-family: 'Montserrat', serif; font-size: 1rem; padding: 0.8rem 2rem; border-radius: 50px; border: 1px solid #b98f58; color: #b98f58; background: transparent; cursor: pointer; transition: all 0.3s ease; }
+        #contract-close-btn:hover { background: #b98f58; color: #fff; }
+        
+        #mapa-astral-visual {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            max-width: 350px;
+            margin: 0 auto;
+            position: relative;
+        }
+        #mapa-astral-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        #mapa-astral-text {
+            text-align: center;
+            margin-top: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #mapa-astral-text h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--cor-dourado-premium);
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+        #mapa-astral-text p {
+            font-size: 0.95rem;
+            color: var(--cor-cinza-claro);
+            line-height: 1.8;
+        }
+        
+        .mapa-astral-orbit-path {
+            fill: none;
+            stroke: var(--cor-dourado-premium);
+            stroke-width: 0.5;
+            opacity: 0.4;
+        }
+
+        .mapa-astral-sign {
+            font-family: serif;
+            fill: var(--cor-dourado-premium);
+            filter: drop-shadow(0 0 5px var(--cor-dourado-premium));
+            transition: transform 0.5s ease-in-out;
+        }
+
+        #orbit-group {
+            animation: spin-orbit 20s linear infinite;
+            transform-origin: center;
+        }
+
+        @keyframes spin-orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        #final-celebration { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.5s ease-in-out; }
+        #final-celebration.visible { opacity: 1; visibility: visible; }
+        .confetti { position: absolute; width: 10px; height: 10px; background-color: red; opacity: 0; animation: fall-and-fade 4s linear forwards; }
+        @keyframes fall-and-fade { 0% { top: -10%; opacity: 1; transform: translateX(0); } 100% { top: 110%; opacity: 0; transform: translateX(100px); } }
+        #final-love-message { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: clamp(4rem, 15vw, 8rem); color: var(--cor-branco-puro); text-shadow: 0 0 10px #ff2d75, 0 0 30px #ff2d75, 0 0 60px var(--cor-branco-puro); animation: final-pulse 1.5s infinite; }
+        @keyframes final-pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        
+        @media (max-width: 768px) { .feature-showcase { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    
+    <div id="interactive-demo-container">
+        <div id="galaxy-background"></div>
+        <div class="body-wrapper">
+            <div id="heart-rain-container"></div>
+            <div id="tela-entrada">
+                <div class="conteudo-entrada">
+                    <div id="cadeado-container">
+                        <i id="icone-cadeado-fechado" class="fa-solid fa-lock"></i>
+                        <i id="icone-cadeado-aberto" class="fa-solid fa-unlock"></i>
+                    </div>
+                    <button id="botao-desbloquear">Clique para acessar nosso universo particular</button>
+                </div>
+                <div class="efeito-flash"></div>
+            </div>
+
+            <main id="conteudo-principal-demo">
+                <h1 class="titulo-principal">Um Desvendar de Sentimentos</h1>
+                <p class="subtitulo-principal">Explore as emoções que eu preparei para você.</p>
+                
+                <div class="feature-showcase">
+                    <div class="feature-text-content">
+                        <h3 class="feature-title">Uma Carta do Coração</h3>
+                        <p class="feature-description">Aqui, guardei palavras que são só nossas. É um cantinho especial onde você pode ler e reler meus sentimentos, um lembrete do nosso laço que o tempo não pode apagar.</p>
+                    </div>
+                    <div id="carta-container" class="feature-interactive-element">
+                        <div id="carta">
+                            <h2>Meu Universo Particular</h2>
+                            <p>Meu bem,</p>
+                            <p>Se você abriu este cadeado, significa que um pedaço da minha alma encontrou o caminho até você. Existem galáxias inteiras de sentimentos que as palavras comuns não conseguem descrever, e é por isso que criei este nosso pequeno refúgio digital.</p>
+                            <p>Cada pixel, cada cor e cada palavra aqui foram pensados com o seu sorriso em mente. Isto é mais que uma página; é um eco do meu coração, um espelho do mundo maravilhoso que você me ajudou a enxergar.</p>
+                            <hr class="separador-carta">
+                            <div class="assinatura">
+                                <p>Com todo o meu amor,</p>
+                                <p>Sempre seu/sua...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-showcase">
+                    <div class="feature-text-content">
+                        <h3 class="feature-title">Nossas Memórias em um Álbum</h3>
+                        <p class="feature-description">Cada foto aqui é uma pequena janela para um momento feliz que vivemos. Um sorriso, uma viagem, um olhar... Criei esta galeria para que a gente possa passear pelas nossas lembranças sempre que a saudade apertar.</p>
+                    </div>
+                    <div id="carrossel-container" class="feature-interactive-element">
+                        <div id="fotos-wrapper">
+                            <div id="efeito-piscar"></div>
+                            <img src="https://i.postimg.cc/4NJrnT6Z/IMG-0332.jpg" class="carrossel-foto" alt="Memória 1" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+1'">
+                            <img src="https://i.postimg.cc/WpmB24JX/IMG-0333.jpg" class="carrossel-foto" alt="Memória 2" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+2'">
+                            <img src="https://i.postimg.cc/4yGjzDj6/IMG-0335.jpg" class="carrossel-foto" alt="Memória 3" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+3'">
+                            <img src="https://i.postimg.cc/QCqwS6rR/IMG-0336.jpg" class="carrossel-foto" alt="Memória 4" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+4'">
+                            <img src="https://i.postimg.cc/MTVhf63Z/IMG-0337.jpg" class="carrossel-foto" alt="Memória 5" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+5'">
+                            <img src="https://i.postimg.cc/1zLkznHY/IMG-0338.jpg" class="carrossel-foto" alt="Memória 6" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+6'">
+                            <img src="https://i.postimg.cc/wjbKSbsz/IMG-0339.jpg" class="carrossel-foto" alt="Memória 7" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+7'">
+                            <img src="https://i.postimg.cc/wjB84dMF/IMG-0340.jpg" class="carrossel-foto" alt="Memória 8" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+8'">
+                            <img src="https://i.postimg.cc/yNgqBXFZ/IMG-0341.jpg" class="carrossel-foto" alt="Memória 9" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+9'">
+                            <img src="https://i.postimg.cc/fTCQvbzJ/IMG-0342.jpg" class="carrossel-foto" alt="Memória 10" onerror="this.src='https://placehold.co/600x800/000000/FFFFFF?text=Mem%C3%B3ria+10'">
+                            <div class="carrossel-botoes">
+                                <button id="botao-anterior"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button id="botao-proximo"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-showcase">
+                    <div class="feature-text-content">
+                         <h3 class="feature-title">Nosso Tempo, Nossa História</h3>
+                        <p class="feature-description">Cada segundo ao seu lado é precioso. Este relógio não marca apenas as horas, mas celebra cada instante da nossa jornada juntos, mostrando o quanto nossa história já cresceu.</p>
+                    </div>
+                    <div id="contador-container" class="feature-interactive-element">
+                        <div class="tempo-wrapper">
+                            <div><span id="dias">00</span><span>Dias</span></div>
+                            <div><span id="horas">00</span><span>Horas</span></div>
+                            <div><span id="minutos">00</span><span>Minutos</span></div>
+                            <div><span id="segundos">00</span><span>Segundos</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-showcase">
+                     <div class="feature-text-content">
+                        <h3 class="feature-title">A Nossa Trilha Sonora</h3>
+                        <p class="feature-description">Existem músicas que são só nossas, que transportam a gente para momentos especiais. Preparei uma seleção com as melodias que embalam nosso amor, para a gente poder dançar com as emoções.</p>
+                    </div>
+                    <div id="musica-container" class="feature-interactive-element">
+                        <div id="players-wrapper">
+                             <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/5B4611SCn4puXahrf7rqkj?utm_source=generator" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                             <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/70maGr0lQYDj0tcpcA2ORM?utm_source=generator" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                             <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2plbrEY59IikOBgBGLjaoe?utm_source=generator" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                             <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6hiKXxS7pgPKnKfCU7UJ6O?utm_source=generator" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                             <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7dAbpCdKHAPNONpwGTmGzC?utm_source=generator" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-showcase">
+                    <div class="feature-text-content">
+                        <h3 class="feature-title">Um Recado do Meu Coração</h3>
+                        <p class="feature-description">Às vezes, as palavras escritas não são suficientes. Por isso, gravei uma mensagem para você ouvir minha voz, sentindo todo o carinho e a emoção que tenho guardados aqui, especialmente para você.</p>
+                    </div>
+                    <div id="audio-container" class="feature-interactive-element">
+                        <audio id="player-audio-principal" src="https://raw.githubusercontent.com/igrm55/meu_audio/main/Rua%20e%20Mussurunga%20II%20St%20J%203.m4a" style="display: none;"></audio>
+                        <div class="audio-player-custom">
+                            <button id="audio-play-pause"><i class="fas fa-play"></i></button>
+                            <div id="audio-time">00:00 / 00:00</div>
+                            <div class="audio-progress-container">
+                                <div id="audio-progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                 <div class="feature-showcase">
+                    <div class="feature-text-content">
+                        <h3 class="feature-title">Pequenos Segredos de Amor</h3>
+                        <p class="feature-description">Espalhei pequenos corações por aqui. Cada um guarda uma mensagem, um elogio ou uma lembrança só nossa. Clique neles para descobrir esses segredinhos e, quem sabe, arrancar um sorriso seu.</p>
+                    </div>
+                    <div id="special-hearts-container" class="feature-interactive-element">
+                        <div id="hearts-wrapper">
+                            <i class="fas fa-heart special-heart" data-message="Eu te amo, hoje e sempre."></i><i class="fas fa-heart special-heart" data-message="Você é o meu porto seguro."></i><i class="fas fa-heart special-heart" data-message="Cada dia com você é um presente."></i><i class="fas fa-heart special-heart" data-message="O seu sorriso ilumina meu universo."></i><i class="fas fa-heart special-heart" data-message="Penso em você a cada segundo."></i><i class="fas fa-heart special-heart" data-message="Minha saudade tem seu nome."></i><i class="fas fa-heart special-heart" data-message="Você me faz uma pessoa melhor."></i><i class="fas fa-heart special-heart" data-message="Nossa história é a minha favorita."></i><i class="fas fa-heart special-heart" data-message="Com você, tudo é mais bonito."></i><i class="fas fa-heart special-heart" data-message="Para sempre nós."></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-showcase">
+                    <div class="feature-text-content">
+                        <h3 class="feature-title">Uma Brincadeira para Nós Dois</h3>
+                        <p class="feature-description">Porque nosso amor também é feito de risadas e diversão, criei este joguinho. É um desafio leve para a gente se divertir juntos e mostrar que somos um time incrível em qualquer situação.</p>
+                    </div>
+                    <div id="game-container" class="feature-interactive-element">
+                        <div id="game-area-wrapper">
+                            <div id="game-info">
+                                <div id="game-timer">Tempo: 30s</div>
+                                <div id="game-score">Corações: 0</div>
+                            </div>
+                            <div id="game-area">
+                                <div id="game-overlay">
+                                    <p id="game-instructions">Capture os corações antes que eles sumam!</p>
+                                    <button id="game-start-btn">Começar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-showcase">
+                    <div class="feature-text-content">
+                        <h3 class="feature-title">Um Segredo Só Nosso</h3>
+                        <p class="feature-description">Tem uma última surpresa, a mais especial de todas. Ela está protegida por uma senha que só nós dois conhecemos. Tente adivinhar (uma dica: é a palavra que nos une). A senha é "<b>amor</b>".</p>
+                    </div>
+                    <div id="secret-message-container" class="feature-interactive-element">
+                        <form id="secret-form">
+                            <i id="secret-lock-icon" class="fas fa-lock"></i>
+                            <input type="password" id="password-input" placeholder="Digite a senha secreta">
+                            <button type="submit" id="unlock-btn">Desvendar</button>
+                        </form>
+                        <div id="secret-letter-container">
+                            <div id="secret-letter">
+                                <button id="secret-letter-close-btn">&times;</button>
+                                <h2>Para Sempre</h2>
+                                <p>E aqui, no final desta jornada, a verdade é simples: tudo isso foi feito para te mostrar que o meu mundo é imensamente mais bonito porque você existe nele. Este não é um ponto final, mas uma promessa.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-showcase">
+                    <div class="feature-text-content">
+                        <h3 class="feature-title">Nossa Conexão nas Estrelas</h3>
+                        <p class="feature-description">Dizem que algumas histórias estão escritas nas estrelas. Aqui está o mapa da nossa. Uma representação de como nossos mundos se alinharam, celebrando a magia e a união que o universo nos proporcionou.</p>
+                    </div>
+                    <div class="feature-interactive-element">
+                         <div id="mapa-astral-visual">
+                            <svg id="mapa-astral-svg" viewBox="0 0 200 200">
+                                <defs>
+                                    <radialGradient id="grad-mapa-aura" cx="50%" cy="50%" r="50%">
+                                        <stop offset="0%" stop-color="var(--cor-dourado-premium)" stop-opacity="0.2" />
+                                        <stop offset="100%" stop-color="var(--cor-dourado-premium)" stop-opacity="0" />
+                                    </radialGradient>
+                                </defs>
+                                <circle cx="100" cy="100" r="99" fill="url(#grad-mapa-aura)" />
+                                <circle class="mapa-astral-orbit-path" cx="100" cy="100" r="80" />
+                                <g id="orbit-group">
+                                    <g transform="translate(100, 20)">
+                                        <text class="mapa-astral-sign" x="0" y="15" font-size="40" text-anchor="middle" alignment-baseline="middle">♑</text>
+                                    </g>
+                                    <g transform="translate(100, 180)">
+                                        <text class="mapa-astral-sign" x="0" y="15" font-size="40" text-anchor="middle" alignment-baseline="middle">♉</text>
+                                    </g>
+                                </g>
+                            </svg>
+                         </div>
+                         <div id="mapa-astral-text">
+                            <h3>Capricórnio & Touro: A Construção de um Amor Sólido</h3>
+                            <p>Quando a determinação de Capricórnio encontra a lealdade de Touro, nasce uma conexão de terra, forte e segura. Ambos práticos e realistas, vocês constroem um universo de confiança mútua, onde a estabilidade não é rotina, mas sim a base para um amor que floresce com o tempo. Uma união destinada a durar, com raízes profundas e um futuro próspero.</p>
+                         </div>
+                    </div>
+                </div>
+
+                <div class="feature-showcase">
+                     <div class="feature-text-content">
+                        <h3 class="feature-title">Um Convite para a Eternidade</h3>
+                        <p class="feature-description">Mais do que um simples recurso, preparei um momento especial. É um convite para dar o próximo passo em nossa jornada, uma forma de selar nosso compromisso e transformar o nosso amor em algo eterno.</p>
+                    </div>
+                    <div id="proposal-container" class="feature-interactive-element">
+                        <div id="proposal-content">
+                            <p id="proposal-question">Nossa história foi escrita nas estrelas... Você aceita continuar compondo essa poesia comigo, para sempre?</p>
+                            <div id="proposal-buttons">
+                                <button id="yes-btn">Sim, claro que sim!</button>
+                                <button id="doubt-btn">Não sei...</button>
+                            </div>
+                            <p id="doubt-message">No nosso universo, não há espaço para dúvidas, apenas para o amor.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MODAIS E CELEBRAÇÃO FINAL (da demo) -->
+                <div id="heart-message-modal"><div id="modal-content"><button id="modal-close-btn">&times;</button><p id="modal-text"></p></div></div>
+                <div id="proposal-modal"><i id="treasure-chest-icon" class="fas fa-treasure-chest"></i><div id="scroll-container"><div id="scroll-paper"><h3 id="contract-title">Contrato de Amor Eterno</h3><div class="contract-body"><p>Pelo presente instrumento, as partes abaixo assinadas no coração, celebram o presente <strong>Contrato de Amor Eterno</strong>, sob as seguintes cláusulas:</p><p><strong>Cláusula 1ª:</strong> Fica acordado que o amor, o carinho, o respeito e a cumplicidade aqui celebrados são, por natureza, renováveis a cada amanhecer.</p><p><strong>Cláusula 2ª:</strong> O prazo de validade deste contrato é <strong>Para Sempre</strong>, com renovação automática a cada beijo, abraço ou sorriso.</p><p><strong>Cláusula 3ª:</strong> A assinatura deste contrato implica na concordância em construir novas memórias, superar desafios juntos e nunca esquecer o brilho que um encontrou no outro.</p><p><strong>Data da Assinatura:</strong> Hoje e todos os dias.</p><p><strong>Data de Expiração:</strong> Nunca.</p></div><div class="contract-stamp">ACEITO</div><button id="contract-close-btn">Fechar e Celebrar</button></div></div></div>
+                <div id="final-celebration"><div id="confetti-container"></div><h1 id="final-love-message">Eu te Amo</h1><button id="celebration-close-btn" style="display: none;">X</button></div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- LÓGICA DA DEMONSTRAÇÃO INTERATIVA ---
+        const interactiveDemoContainer = document.getElementById('interactive-demo-container');
+        const telaEntrada = document.getElementById('tela-entrada');
+        const cadeadoContainer = document.getElementById('cadeado-container');
+        const botaoDesbloquear = document.getElementById('botao-desbloquear');
+        const conteudoPrincipalDemo = document.getElementById('conteudo-principal-demo');
+        const conteudoEntrada = document.querySelector('.conteudo-entrada');
+        const efeitoFlash = document.querySelector('.efeito-flash');
+        
+        let isUnlocking = false;
+        let demoIniciada = false;
+        let contadorIntervalo, gameIntervalId, gameLoopId;
+
+        function iniciarDemo() {
+            resetarDemo(); 
+            if (!demoIniciada) {
+                createStars(50);
+                iniciarChuvaDeCoracoes();
+                demoIniciada = true;
+            };
+        }
+        
+        function resetarDemo() {
+            // Limpa intervalos e reseta áudios
+            if (contadorIntervalo) clearInterval(contadorIntervalo);
+            if (gameIntervalId) clearInterval(gameIntervalId);
+            if (gameLoopId) cancelAnimationFrame(gameLoopId);
+            const audio = document.getElementById('player-audio-principal');
+            if (audio) { audio.pause(); audio.currentTime = 0; }
+            
+            // Reseta a tela de entrada
+            telaEntrada.style.visibility = 'visible';
+            telaEntrada.style.opacity = '1';
+            conteudoPrincipalDemo.classList.remove('visivel');
+            conteudoEntrada.style.opacity = '1';
+            cadeadoContainer.classList.remove('aberto');
+            cadeadoContainer.style.pointerEvents = 'auto';
+            botaoDesbloquear.style.pointerEvents = 'auto';
+            
+            // Reinicia animações
+            cadeadoContainer.style.animation = 'none';
+            void cadeadoContainer.offsetWidth; // Trigger reflow
+            cadeadoContainer.style.animation = 'pulsarCadeado 4s infinite ease-in-out';
+            efeitoFlash.style.animation = 'none';
+            
+            // Reseta formulários e mensagens
+            document.getElementById('password-input').value = '';
+            document.getElementById('secret-form').style.display = 'flex';
+            document.getElementById('secret-form').style.opacity = '1';
+            document.getElementById('secret-letter-container').classList.remove('visible');
+            document.getElementById('secret-lock-icon').classList.remove('unlocked');
+            
+            document.getElementById('doubt-btn').classList.remove('hidden');
+            document.getElementById('doubt-message').classList.remove('visible');
+            
+            isUnlocking = false;
+        }
+
+        function desbloquearSite() {
+            if (isUnlocking) return;
+            isUnlocking = true;
+
+            // Animação de desbloqueio
+            cadeadoContainer.style.pointerEvents = 'none';
+            botaoDesbloquear.style.pointerEvents = 'none';
+            cadeadoContainer.style.animation = 'none';
+            cadeadoContainer.classList.add('aberto');
+
+            // Flash e fade out da tela de entrada
+            setTimeout(() => { efeitoFlash.style.animation = 'explosaoFlash 1.2s forwards'; }, 600);
+            setTimeout(() => { conteudoEntrada.style.opacity = '0'; }, 800);
+            
+            setTimeout(() => {
+                telaEntrada.style.opacity = '0';
+                telaEntrada.style.visibility = 'hidden';
+            }, 1200);
+
+            // Mostra o conteúdo principal e inicializa os módulos interativos
+            setTimeout(() => {
+                conteudoPrincipalDemo.classList.add('visivel');
+                iniciarCarrossel();
+                iniciarContador();
+                iniciarAudioPlayer();
+                iniciarJogo();
+                iniciarMensagemSecreta();
+                iniciarCoracoesEspeciais();
+                iniciarPedido();
+            }, 1500);
+        }
+
+        // Adiciona os listeners para desbloquear
+        botaoDesbloquear.addEventListener('click', desbloquearSite);
+        cadeadoContainer.addEventListener('click', desbloquearSite);
+        
+        function createStars(count) {
+            const container = document.getElementById('galaxy-background');
+            if (!container || container.childElementCount > 0) return; // Não cria estrelas se já existirem
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                container.appendChild(star);
+            }
+        }
+
+        function iniciarChuvaDeCoracoes() {
+            const container = document.querySelector('#interactive-demo-container #heart-rain-container');
+            if(!container || container.childElementCount > 0) return; // Não cria se já existirem
+            const hearts = 30;
+            for (let i = 0; i < hearts; i++) {
+                const heart = document.createElement('i');
+                heart.className = 'fas fa-heart background-heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.opacity = Math.random() * 0.5 + 0.3;
+                heart.style.fontSize = (Math.random() * 1 + 0.5) + 'rem';
+                container.appendChild(heart);
+            }
+        }
+
+        const fotos = document.querySelectorAll('.carrossel-foto');
+        const botaoAnterior = document.getElementById('botao-anterior');
+        const botaoProximo = document.getElementById('botao-proximo');
+        const efeitoPiscar = document.getElementById('efeito-piscar');
+        let fotoAtualIndex = 0;
+        let trocandoFoto = false;
+
+        function mostrarFoto(index) {
+            if (trocandoFoto || fotos.length === 0) return;
+            trocandoFoto = true;
+            efeitoPiscar.classList.add('ativo');
+            setTimeout(() => {
+                fotos.forEach(foto => foto.classList.remove('ativa'));
+                fotos[index].classList.add('ativa');
+                setTimeout(() => {
+                    efeitoPiscar.classList.remove('ativo');
+                    trocandoFoto = false;
+                }, 100);
+            }, 300);
+        }
+
+        function iniciarCarrossel() {
+            if (fotos.length > 0 && !fotos[fotoAtualIndex].classList.contains('ativa')) {
+                fotos[fotoAtualIndex].classList.add('ativa');
+            }
+        }
+        botaoProximo.addEventListener('click', () => { fotoAtualIndex = (fotoAtualIndex + 1) % fotos.length; mostrarFoto(fotoAtualIndex); });
+        botaoAnterior.addEventListener('click', () => { fotoAtualIndex = (fotoAtualIndex - 1 + fotos.length) % fotos.length; mostrarFoto(fotoAtualIndex); });
+        
+        function iniciarContador() {
+            const diasEl = document.getElementById('dias'), horasEl = document.getElementById('horas'), minutosEl = document.getElementById('minutos'), segundosEl = document.getElementById('segundos');
+            if (!diasEl) return;
+            if(contadorIntervalo) clearInterval(contadorIntervalo); // Limpa intervalo anterior se existir
+            const dataInicio = new Date(2023, 0, 1, 0, 0, 0); // Data de exemplo
+            function atualizarContador() {
+                const agora = new Date(); const diferenca = agora - dataInicio;
+                const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+                const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
+                const segundos = Math.floor((diferenca % (1000 * 60)) / 1000);
+                diasEl.innerText = formatarTempo(dias); horasEl.innerText = formatarTempo(horas); minutosEl.innerText = formatarTempo(minutos); segundosEl.innerText = formatarTempo(segundos);
+            }
+            function formatarTempo(t) { return t < 10 ? `0${t}` : t; }
+            atualizarContador();
+            contadorIntervalo = setInterval(atualizarContador, 1000);
+        }
+        
+        function iniciarAudioPlayer() {
+            const audio = document.getElementById('player-audio-principal');
+            const playPauseBtn = document.getElementById('audio-play-pause');
+            const progressContainer = document.querySelector('.audio-progress-container');
+            const progressBar = document.getElementById('audio-progress-bar');
+            const timeEl = document.getElementById('audio-time');
+            if(!audio || !playPauseBtn) return;
+            
+            // Reset do player
+            audio.currentTime = 0;
+            progressBar.style.width = '0%';
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+
+            function togglePlayPause() {
+                if (audio.paused) { audio.play(); playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>'; } 
+                else { audio.pause(); playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; }
+            }
+            function updateProgress() {
+                if(!audio.duration || !isFinite(audio.duration)) return;
+                const { duration, currentTime } = audio;
+                progressBar.style.width = `${(currentTime / duration) * 100}%`;
+                timeEl.textContent = `${formatAudioTime(currentTime)} / ${formatAudioTime(duration)}`;
+            }
+            function setProgress(e) {
+                const width = this.clientWidth;
+                const clickX = e.offsetX;
+                audio.currentTime = (clickX / width) * audio.duration;
+            }
+            function formatAudioTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            playPauseBtn.onclick = togglePlayPause;
+            audio.ontimeupdate = updateProgress;
+            audio.onloadedmetadata = updateProgress;
+            progressContainer.onclick = setProgress;
+        }
+
+        function iniciarJogo() {
+            const gameArea = document.getElementById('game-area'), scoreDisplay = document.getElementById('game-score'), timerDisplay = document.getElementById('game-timer'), startBtn = document.getElementById('game-start-btn'), overlay = document.getElementById('game-overlay'), instructions = document.getElementById('game-instructions'), heartRainContainer = document.querySelector('#interactive-demo-container #heart-rain-container');
+            let score = 0, timeLeft = 30, hearts = [], isGameRunning = false;
+            
+            if(!gameArea) return;
+
+            // Reset do jogo
+            overlay.classList.remove('hidden');
+            instructions.innerHTML = `Capture os corações antes que eles sumam!`;
+            startBtn.textContent = 'Começar';
+
+            function createHeart() {
+                if(!gameArea || !isGameRunning) return;
+                const heartElement = document.createElement('i');
+                heartElement.className = 'fas fa-heart game-heart';
+                const heart = { element: heartElement, x: Math.random() * (gameArea.clientWidth - 40), y: -50, speed: 1.5 + Math.random() * 2.5 };
+                heartElement.style.fontSize = `${20 + Math.random() * 25}px`;
+                heartElement.style.left = `${heart.x}px`; heartElement.style.top = `${heart.y}px`; heartElement.style.color = `hsl(${340 + Math.random() * 20}, 100%, 65%)`;
+                heartElement.onclick = () => {
+                    score++; scoreDisplay.textContent = `Corações: ${score}`; heartElement.classList.add('captured');
+                    hearts = hearts.filter(h => h !== heart);
+                    setTimeout(() => { if(heartElement.parentElement) heartElement.remove(); }, 300);
+                };
+                hearts.push(heart); gameArea.appendChild(heartElement);
+            }
+            
+            function gameLoop() {
+                if (!isGameRunning) return;
+                for (let i = hearts.length - 1; i >= 0; i--) {
+                    const heart = hearts[i]; heart.y += heart.speed; heart.element.style.top = `${heart.y}px`;
+                    if (heart.y > gameArea.clientHeight) { heart.element.remove(); hearts.splice(i, 1); }
+                }
+                gameLoopId = requestAnimationFrame(gameLoop);
+            }
+
+            function startGame() {
+                score = 0; timeLeft = 30; isGameRunning = true;
+                scoreDisplay.textContent = 'Corações: 0'; timerDisplay.textContent = 'Tempo: 30s';
+                hearts.forEach(h => h.element.remove()); hearts = [];
+                overlay.classList.add('hidden'); 
+                if (heartRainContainer) heartRainContainer.style.animationPlayState = 'paused';
+                if (gameIntervalId) clearInterval(gameIntervalId);
+                if (gameLoopId) cancelAnimationFrame(gameLoopId);
+                gameIntervalId = setInterval(() => { 
+                    if (!isGameRunning) return clearInterval(gameIntervalId);
+                    timeLeft--; 
+                    timerDisplay.textContent = `Tempo: ${timeLeft}s`; 
+                    if (timeLeft <= 0) endGame(); 
+                }, 1000);
+                const heartSpawner = setInterval(() => {
+                    if (!isGameRunning) clearInterval(heartSpawner);
+                    else createHeart();
+                }, 400);
+                requestAnimationFrame(gameLoop);
+            }
+
+            function endGame() {
+                isGameRunning = false;
+                clearInterval(gameIntervalId); cancelAnimationFrame(gameLoopId); 
+                if (heartRainContainer) heartRainContainer.style.animationPlayState = 'running';
+                instructions.innerHTML = `Fim de jogo!<br><span id="game-final-score">Você capturou ${score} corações!</span>`;
+                startBtn.textContent = 'Jogar Novamente'; overlay.classList.remove('hidden');
+                setTimeout(() => { hearts.forEach(h => h.element.remove()); hearts = []; }, 500);
+            }
+            startBtn.onclick = startGame;
+        }
+        
+        function iniciarMensagemSecreta() {
+            const secretForm = document.getElementById('secret-form'), passwordInput = document.getElementById('password-input'), secretLockIcon = document.getElementById('secret-lock-icon'), secretLetterContainer = document.getElementById('secret-letter-container'), closeSecretLetterBtn = document.getElementById('secret-letter-close-btn');
+            const SENHA_SECRETA = "amor";
+            secretForm.onsubmit = (e) => {
+                e.preventDefault(); const inputVal = passwordInput.value.trim().toLowerCase();
+                if (inputVal === SENHA_SECRETA) {
+                    secretLockIcon.classList.add('unlocked'); secretForm.style.opacity = '0';
+                    setTimeout(() => { secretForm.style.display = 'none'; secretLetterContainer.classList.add('visible'); }, 500);
+                } else {
+                    passwordInput.classList.add('shake'); passwordInput.value = ''; passwordInput.placeholder = 'Senha incorreta, tente de novo.';
+                    setTimeout(() => passwordInput.classList.remove('shake'), 500);
+                }
+            };
+            closeSecretLetterBtn.onclick = () => {
+                secretLetterContainer.classList.remove('visible');
+                setTimeout(() => {
+                    secretForm.style.display = 'flex'; secretForm.style.opacity = '1';
+                    secretLockIcon.classList.remove('unlocked'); passwordInput.value = ''; passwordInput.placeholder = 'Digite a senha secreta';
+                }, 500);
+            };
+        }
+        
+        function iniciarCoracoesEspeciais() {
+            const specialHearts = document.querySelectorAll('.special-heart'), modal = document.getElementById('heart-message-modal'), modalText = document.getElementById('modal-text'), closeModalBtn = document.getElementById('modal-close-btn');
+            specialHearts.forEach(heart => {
+                heart.onclick = () => { modalText.textContent = heart.dataset.message; modal.classList.add('visible'); };
+            });
+            function closeModal() { modal.classList.remove('visible'); }
+            closeModalBtn.onclick = closeModal;
+            modal.onclick = (e) => { if (e.target === modal) closeModal(); };
+        }
+        
+        function iniciarPedido() {
+            const yesBtn = document.getElementById('yes-btn'), doubtBtn = document.getElementById('doubt-btn'), doubtMessage = document.getElementById('doubt-message'), proposalModal = document.getElementById('proposal-modal'), treasureChest = document.getElementById('treasure-chest-icon'), scrollContainer = document.getElementById('scroll-container'), scrollPaper = document.getElementById('scroll-paper'), contractCloseBtn = document.getElementById('contract-close-btn'), finalCelebration = document.getElementById('final-celebration');
+
+            doubtBtn.onclick = () => { doubtMessage.classList.add('visible'); doubtBtn.classList.add('hidden'); };
+
+            yesBtn.onclick = () => {
+                proposalModal.classList.add('visible');
+                setTimeout(() => treasureChest.classList.add('open'), 500);
+                setTimeout(() => treasureChest.style.opacity = '0', 1500);
+                setTimeout(() => { treasureChest.style.display = 'none'; scrollContainer.style.display = 'block'; void scrollPaper.offsetWidth; scrollPaper.classList.add('unrolling'); }, 2000);
+            };
+
+            contractCloseBtn.onclick = () => {
+                proposalModal.classList.remove('visible'); 
+                finalCelebration.classList.add('visible'); 
+                lancarConfetes();
+                setTimeout(() => {
+                    finalCelebration.classList.remove('visible');
+                    resetarDemo(); // Reinicia a demo para um novo ciclo
+                }, 5000); 
+            };
+            
+            function lancarConfetes() {
+                const confettiContainer = document.getElementById('confetti-container');
+                if (!confettiContainer) return; confettiContainer.innerHTML = '';
+                const colors = ['#ff4757', '#e6d8ff', '#feca57', '#48dbfb', '#1dd1a1'];
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div'); confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.animation = `fall-and-fade ${Math.random() * 2 + 3}s linear forwards ${Math.random() * 2}s`;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    confettiContainer.appendChild(confetti);
+                }
+            }
+        }
+
+        // Inicia a demonstração quando a página carrega
+        iniciarDemo();
+    });
+    </script>
+</body>
+</html>
